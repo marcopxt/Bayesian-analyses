@@ -12,5 +12,9 @@ Multitrait model for genetic assesment in jathropha curcas. We implemented the m
 DOI: https://doi.org/10.1371/journal.pone.0247775
 
 
-#### 2. 
+#### 2. Multitrait and multiharvest analyses for genetic assessment and selection of Tahiti acid lime genotypes through Bayesian inference
+
+Multitrait mixed models implemented at the bayesian framework to selection superior genotypes of tahiti acid lime considering different traits and selection indexes.
+
+DOI: https://doi.org/10.1016/j.scienta.2021.110536
 
