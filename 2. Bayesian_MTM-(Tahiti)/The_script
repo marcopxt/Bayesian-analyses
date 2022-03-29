@@ -1,0 +1,163 @@
+######## Multitrait and multiharvest analyses for genetic assessment and selection of
+########  Tahiti acid lime genotypes through Bayesian inference
+
+author: M.Sc. Marco Antônio Peixoto - marco.peixotom@gmail.com
+date: 28/03/2022
+Doi: https://doi.org/10.1016/j.scienta.2021.110536
+
+####>>>>-----    I. Initializing the model
+
+##### 1. Data and initial features
+require(MCMCglmm)
+require(boa)
+
+##### 2. Dataset
+ 
+data=read.table("file_path.txt") #insert the data here
+
+##### 3. Transformation into factors
+
+Transforming the data into factors
+
+data$medrep=factor(data$MedRep)
+data$prog=factor(data$Gen)
+data$perm=factor(data$GenRep)
+data$int=factor(data$Int)
+data$med=factor(data$Med)
+
+
+####>>>>-----    II. Bayesian model parameters
+
+##### 1.Setting up the initial Bayesian model parameters
+
+Niter=100000 #total number of iterations
+Burnin=10000 #initial data Burn-in
+Thin=5       #sampling interval
+N=(Niter-Burnin)/Thin #total iterations
+N
+
+
+####>>>>-----     III. Priors for the Bayesian model
+
+Prior 1: Prior considering a homogeneous structure for the residual effect.
+
+prior1 = list(R = list(V = 1, nu = 2), 
+              G = list(G1 = list(V = 1, nu = 2), 
+                       G2 = list(V = 1, nu = 2), 
+                       G3 = list(V = 1, nu = 2)))
+
+
+
+Prior 2: Prior considering a heterogeneous structure for the residual effect (considering 8 environments)
+ 
+
+prior2 = list(R = list (V=matrix(c(0.179409942,	-0.003170634,	        0.08685657,	 0.177637023,	 0.010804302,	 0.008197333,	-0.030945591,	-0.053606561, -0.003170634,	 0.088404828,	-0.06617919,	-0.041295488,	 0.008661397,	-0.014482489,	-0.029509375,	-0.052166328,  0.08685657,	-0.066179194,	 0.4795885,	   0.368977805,	 0.00731674,  -0.00240141,	-0.046906268,	 0.065500608,  0.177637023,	-0.041295488,	 0.36897781,	 0.46700785,	 0.016666375,	 0.075163962,	-0.063271149,	 0.0044223,  0.010804302,	 0.008661397,	 0.00731674,	 0.016666375,	 0.048432265,	 0.035958261,	 0.007852126,  0.055015872,  0.008197333,	-0.014482489,	-0.00240141,	 0.075163962,	 0.035958261,	 0.104232387,	-0.028602354,	 0.098809686, -0.030945591,	-0.029509375,	-0.04690627,	-0.063271149,	 0.007852126,	-0.028602354,	 0.104456792,	-0.021228654, -0.053606561,	-0.052166328,	 0.06550061,	 0.004422345,	 0.055015872,	 0.098809686,	-0.021228654,	 0.317539237),8,8), nu=2),
+              G = list(G1 = list(V = 1, nu = 2), 
+                       G2 = list(V = 1, nu = 2), 
+                       G3 = list(V = 1, nu = 2)))
+
+
+
+Prior 3: Prior considering a heterogeneous structure for the residual effect (considering 4 environments)
+
+
+prior3 = list(R = list (V=matrix(c(0.16634047,	-0.11627296,	0.012775898,	0.018365069, -0.11627296,	0.44780979,           
+0.058719872,	-0.07773031, 0.0127759,	0.05871987,	0.025381064,	0.005265135, 0.01836507,	-0.07773031,0.005265135,	0.046672637),4,4), nu=2),
+              G = list(G1 = list(V = 1, nu = 2), 
+                       G2 = list(V = 1, nu = 2), 
+                       G3 = list(V = 1, nu = 2)))
+
+
+
+Prior 4: Prior considering a heterogeneous structure for the residual effect (considering 3 environments)
+
+
+prior4 = list(R=list(V=matrix(c(0.3097,  0.1545, -0.1947,
+                               0.1545,  0.2716, -0.1909,
+                             -0.1947, -0.1909, 0.2251),3,3), nu=2),
+              G = list(G1 = list(V = 1, nu = 2), 
+                       G2 = list(V = 1, nu = 2), 
+                       G3 = list(V = 1, nu = 2)))
+
+
+
+####>>>>-----     IV. The Bayesian model
+
+##### Model 1: ID structure for the residual
+
+
+mod = MCMCglmm(trait~medrep, 
+                random=~prog + perm + int, 
+                data=data, 
+                prior=prior1, 
+                verbose=TRUE, 
+                DIC=TRUE, 
+                nitt=Niter, 
+                thin=Thin, 
+                burnin=Burnin, 
+                pr=T)
+
+DIC=(mod$DIC)
+DIC
+```
+
+
+##### Model 2.1: DIAG structure for the residual for 8 environments (traits FY and NF)
+
+
+mod = MCMCglmm(trait~medrep, 
+                random=~prog + perm + int, 
+                rcov=~idh(med):units
+                data=data, 
+                prior=prior2, 
+                verbose=TRUE, 
+                DIC=TRUE, 
+                nitt=Niter, 
+                thin=Thin, 
+                burnin=Burnin, 
+                pr=T)
+
+DIC=(mod$DIC)
+DIC
+```
+
+##### Model 2.2: DIAG structure for the residual for 4 environments (traits CV and SD)
+
+
+mod = MCMCglmm(trait~medrep, 
+                random=~prog + perm + int, 
+                rcov=~idh(med):units
+                data=data, 
+                prior=prior3, 
+                verbose=TRUE, 
+                DIC=TRUE, 
+                nitt=Niter, 
+                thin=Thin, 
+                burnin=Burnin, 
+                pr=T)
+
+DIC=(mod$DIC)
+DIC
+```
+
+
+
+##### Model 2.3: DIAG structure for the residual for 3 environments (trait SS)
+
+
+mod = MCMCglmm(trait~medrep, 
+                random=~prog + perm + int, 
+                rcov=~idh(med):units
+                data=data, 
+                prior=prior4, 
+                verbose=TRUE, 
+                DIC=TRUE, 
+                nitt=Niter, 
+                thin=Thin, 
+                burnin=Burnin, 
+                pr=T)
+
+DIC=(mod$DIC)
+DIC
+```
+
