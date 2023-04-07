@@ -18,3 +18,11 @@ Multitrait mixed models implemented at the bayesian framework to selection super
 
 DOI: https://doi.org/10.1016/j.scienta.2021.110536
 
+
+Any question about the analyses, please, contact me!
+
+Marco
+
+Dr. Marco Antonio Peixoto
+Email: deamorimpeixotom@ufl.edu
+Page: https://marcopxt.github.io/
