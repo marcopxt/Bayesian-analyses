@@ -3,7 +3,7 @@
 ### Content
 
 This repository contains some scripts that I developed for the implementation of bayesian models
-for genetic assesment. In both cases I used the R package MCMCglmm 
+for genetic assesment. In both cases I used the R package MCMCglmm (Hadfield 2010).
 
 #### 1. Multiple-trait model through Bayesian inference applied to Jatropha curcas breeding for bioenergy
 
